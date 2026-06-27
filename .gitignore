@@ -7,3 +7,4 @@ public/media/*
 !public/media/.gitkeep
 src/pages/posts/*
 !src/pages/posts/.gitkeep
+.vercel
