@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "node scripts/sync-obsidian.mjs --safe && astro build",
+    "build": "astro build",
+    "build:local": "npm run sync:safe && astro build",
     "preview": "astro preview --host 127.0.0.1",
     "sync": "node scripts/sync-obsidian.mjs",
     "sync:safe": "node scripts/sync-obsidian.mjs --safe",

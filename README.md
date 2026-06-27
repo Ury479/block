@@ -45,7 +45,13 @@ IMAGE_BED_PROVIDER=lsky LSKY_ENDPOINT="https://example.com/api/v1/upload" LSKY_T
 
 ## 上线
 
-Netlify 和 Vercel 都已配置：
+Netlify 和 Vercel 都已配置。云端构建命令是 `npm run build`，只构建仓库内已经生成好的公开副本，不访问本地 Obsidian。
+
+本地同步并构建可用：
+
+```bash
+npm run build:local
+```
 
 - Netlify：构建命令 `npm run build`，发布目录 `dist`。
 - Vercel：框架选择 Astro，输出目录 `dist`。
