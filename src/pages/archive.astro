@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PostRow from "../components/PostRow.astro";
+import posts from "../data/posts.json";
+---
+
+<BaseLayout title="文稿归档 · Ury 的知识花园">
+  <Header />
+  <main class="site-shell section">
+    <div class="section-head">
+      <h2>文稿归档</h2>
+      <p class="section-kicker">按标题、摘要、类型与主题即时筛选。URL 参数 <code>type</code> 和 <code>topic</code> 可直接链接到某组内容。</p>
+    </div>
+    <div class="archive-tools">
+      <input id="archive-search" type="search" placeholder="搜索标题、摘要、主题…" />
+      <a class="button" href="/rss.xml">RSS</a>
+    </div>
+    {posts.length ? (
+      <div class="post-list" id="archive-list">
+        {posts.map((post) => <PostRow post={post} />)}
+      </div>
+    ) : (
+      <div class="empty-state">尚未同步公开文档。先运行 <code>npm run sync:safe</code> 或指定文件同步。</div>
+    )}
+  </main>
+  <Footer />
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const search = document.querySelector("#archive-search");
+    const rows = Array.from(document.querySelectorAll(".post-row"));
+    const initial = [params.get("q"), params.get("type"), params.get("topic")].filter(Boolean).join(" ");
+    search.value = initial;
+    const apply = () => {
+      const query = search.value.trim().toLowerCase();
+      for (const row of rows) {
+        const haystack = row.textContent.toLowerCase();
+        row.style.display = !query || haystack.includes(query) ? "" : "none";
+      }
+    };
+    search.addEventListener("input", apply);
+    apply();
+  </script>
+</BaseLayout>

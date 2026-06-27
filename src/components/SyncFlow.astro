@@ -1,0 +1,27 @@
+---
+const { manifest } = Astro.props;
+---
+
+<div class="panel sync-card">
+  <div class="panel-title">
+    <strong>同步状态</strong>
+    <span>{manifest.syncedAt ? new Date(manifest.syncedAt).toLocaleString("zh-CN") : "等待首次同步"}</span>
+  </div>
+  <p class="section-kicker">源库只读，图片经图床 provider 处理，生成公开 Markdown 副本与静态页面。</p>
+  <div class="sync-flow" aria-label="同步流程">
+    <div class="sync-node">
+      <strong>Obsidian</strong>
+      <span class="small-caps">{manifest.sourceFiles || 0} source files</span>
+    </div>
+    <span class="sync-arrow">→</span>
+    <div class="sync-node">
+      <strong>图床</strong>
+      <span class="small-caps">{manifest.provider || "local"} · {manifest.uploadedImages || 0} images</span>
+    </div>
+    <span class="sync-arrow">→</span>
+    <div class="sync-node">
+      <strong>Blog</strong>
+      <span class="small-caps">{manifest.published || 0} published notes</span>
+    </div>
+  </div>
+</div>

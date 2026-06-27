@@ -1,0 +1,28 @@
+---
+const current = Astro.url.pathname;
+const nav = [
+  ["/", "首页"],
+  ["/archive/", "文稿"],
+  ["/now/", "现在"],
+  ["/garden/", "知识地图"],
+  ["/sync/", "同步"]
+];
+---
+
+<header class="site-header">
+  <div class="site-shell header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">雨</span>
+      <span>
+        <span class="brand-title">Ury 的知识花园</span>
+        <span class="brand-subtitle">Obsidian to Blog</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      {nav.map(([href, label]) => (
+        <a href={href} aria-current={current === href ? "page" : undefined}>{label}</a>
+      ))}
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div>
+</header>

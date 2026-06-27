@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import SyncFlow from "../components/SyncFlow.astro";
+import manifest from "../data/sync-manifest.json";
+---
+
+<BaseLayout title="同步状态 · Ury 的知识花园">
+  <Header />
+  <main class="site-shell section">
+    <div class="section-head">
+      <h2>Obsidian 同步</h2>
+      <p class="section-kicker">这是单向发布工具：读取本地库，生成公开副本，处理图片链接，不写回、不重命名、不移动 Obsidian 原文件。</p>
+    </div>
+    <SyncFlow manifest={manifest} />
+    <section class="section">
+      <div class="section-head">
+        <h2>上传文档</h2>
+        <p class="section-kicker">安全默认值是只同步 <code>publish: true</code> 的笔记；临时发布可指定单篇文件。</p>
+      </div>
+      <div class="panel sync-card">
+        <pre><code>npm run sync:safe
+npm run sync -- --file "/Users/ury/Documents/Obsidian Vault/路径/文章.md"
+IMAGE_BED_PROVIDER=picgo npm run sync:safe
+IMAGE_BED_PROVIDER=lsky LSKY_ENDPOINT="https://example.com/api/v1/upload" LSKY_TOKEN="***" npm run sync:safe</code></pre>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import "../styles/global.css";
+
+const {
+  title = "Ury 的知识花园",
+  description = "把 Obsidian 里的长期思考整理成可阅读、可订阅、可迁移的个人博客。"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

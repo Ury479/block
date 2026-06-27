@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import posts from "../data/posts.json";
+
+const last = posts[0];
+---
+
+<BaseLayout title="现在 · Ury 的知识花园">
+  <Header />
+  <main class="site-shell section">
+    <div class="section-head">
+      <h2>现在</h2>
+      <p class="section-kicker">给路过的人一个坐标：我最近在整理什么、学习什么、准备把哪些笔记公开。</p>
+    </div>
+    <div class="garden-grid">
+      <section class="panel now-panel">
+        <div class="panel-title"><strong>当前聚焦</strong><span>focus</span></div>
+        <ul class="now-list">
+          <li><span>博客</span><strong>建立 Obsidian 到静态博客的单向发布管线</strong></li>
+          <li><span>内容</span><strong>筛选适合公开的编程日报、项目复盘、AI 学习笔记</strong></li>
+          <li><span>体验</span><strong>让中文长文在手机和桌面上都更好读</strong></li>
+        </ul>
+      </section>
+      <section class="panel now-panel">
+        <div class="panel-title"><strong>最近一次公开更新</strong><span>latest</span></div>
+        {last ? (
+          <a class="post-row" href={last.url}>
+            <span class="post-date">{new Date(last.date).toLocaleDateString("zh-CN")}</span>
+            <span><h3>{last.title}</h3><p>{last.excerpt}</p></span>
+            <span class="post-meta">{last.type}</span>
+          </a>
+        ) : (
+          <p class="section-kicker">等待第一篇公开文章同步。</p>
+        )}
+      </section>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

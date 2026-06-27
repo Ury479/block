@@ -1,0 +1,26 @@
+{
+  "name": "ury-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "node scripts/sync-obsidian.mjs --safe && astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "sync": "node scripts/sync-obsidian.mjs",
+    "sync:safe": "node scripts/sync-obsidian.mjs --safe",
+    "sync:file": "node scripts/sync-obsidian.mjs --file"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.0",
+    "astro": "^7.0.3",
+    "fast-glob": "^3.3.3",
+    "reading-time": "^1.5.0",
+    "sharp": "^0.34.3",
+    "slugify": "^1.6.6",
+    "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

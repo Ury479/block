@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PostRow from "../components/PostRow.astro";
+import SyncFlow from "../components/SyncFlow.astro";
+import posts from "../data/posts.json";
+import topics from "../data/topics.json";
+import manifest from "../data/sync-manifest.json";
+
+const recent = posts.slice(0, 5);
+const typeCounts = ["文稿", "手记", "思考"].map((type) => ({
+  type,
+  count: posts.filter((post) => post.type === type).length
+}));
+---
+
+<BaseLayout>
+  <Header />
+  <main>
+    <section class="site-shell hero">
+      <div>
+        <h1>把散落的笔记，整理成能被重新遇见的知识花园。</h1>
+        <p class="hero-lede">这里同步本地 Obsidian 中适合公开的文章、手记与思考。内容保留 Markdown 的可携带性，阅读体验则交给安静、耐看的中文排版。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#latest">读最近更新</a>
+          <a class="button" href="/sync/">查看同步流程</a>
+        </div>
+      </div>
+      <aside class="panel now-panel">
+        <div class="panel-title">
+          <strong>现在</strong>
+          <span>Now</span>
+        </div>
+        <ul class="now-list">
+          <li><span>本周</span><strong>整理可公开的学习复盘与项目笔记</strong></li>
+          <li><span>写作</span><strong>把长文、手记、灵感拆成三种内容形态</strong></li>
+          <li><span>系统</span><strong>Obsidian 只读同步，图片经图床转存</strong></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="site-shell section">
+      <div class="section-head">
+        <h2>三种内容形态</h2>
+        <p class="section-kicker">参照 Mix Space 的内容模型，把正式文章、短记录与碎片思考分开，让首页不再只有单一列表。</p>
+      </div>
+      <div class="type-rail">
+        {typeCounts.map((item) => (
+          <a class="type-card" href={`/archive/?type=${encodeURIComponent(item.type)}`}>
+            <h3>{item.type}</h3>
+            <p>{item.count} 篇 · {item.type === "文稿" ? "长文、教程、复盘" : item.type === "手记" ? "近况、日报、现场记录" : "灵感、判断、问题意识"}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section id="latest" class="site-shell section">
+      <div class="section-head">
+        <h2>最近更新</h2>
+        <p class="section-kicker">默认只展示已公开标记或指定同步的 Obsidian 文档。</p>
+      </div>
+      {recent.length ? (
+        <div class="post-list">
+          {recent.map((post) => <PostRow post={post} />)}
+        </div>
+      ) : (
+        <div class="empty-state">
+          还没有公开文章。给 Obsidian 笔记添加 <code>publish: true</code>，或运行 <code>npm run sync -- --file "笔记绝对路径"</code> 后，这里会自动出现内容。
+        </div>
+      )}
+    </section>
+
+    <section class="site-shell section">
+      <div class="section-head">
+        <h2>知识地图</h2>
+        <p class="section-kicker">主题不是硬分类，而是从笔记路径、标签与 frontmatter 中自然长出来的索引。</p>
+      </div>
+      <div class="garden-grid">
+        <div class="panel topic-map">
+          {topics.length ? topics.map((topic) => (
+            <a class="topic-chip" href={`/archive/?topic=${encodeURIComponent(topic.name)}`}>{topic.name}<span>{topic.count}</span></a>
+          )) : (
+            <span class="section-kicker">等待首次公开同步后生成主题。</span>
+          )}
+        </div>
+        <SyncFlow manifest={manifest} />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

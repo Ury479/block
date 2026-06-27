@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import manifest from "../data/sync-manifest.json";
+---
+
+<BaseLayout title="Changelog · Ury 的知识花园">
+  <Header />
+  <main class="site-shell section">
+    <div class="section-head">
+      <h2>Changelog</h2>
+      <p class="section-kicker">记录站点同步和结构演进，参照数字花园常见的公开维护日志。</p>
+    </div>
+    <div class="post-list">
+      <article class="post-row">
+        <span class="post-date">{manifest.syncedAt ? new Date(manifest.syncedAt).toLocaleDateString("zh-CN") : "未同步"}</span>
+        <span>
+          <h3>初始化个人博客与 Obsidian 发布管线</h3>
+          <p>建立 Astro 静态站点、三态内容模型、Now 页、知识地图、RSS 与图床适配同步脚本。</p>
+        </span>
+        <span class="post-meta">{manifest.provider}</span>
+      </article>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

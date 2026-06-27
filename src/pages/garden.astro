@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import topics from "../data/topics.json";
+import posts from "../data/posts.json";
+---
+
+<BaseLayout title="知识地图 · Ury 的知识花园">
+  <Header />
+  <main class="site-shell section">
+    <div class="section-head">
+      <h2>知识地图</h2>
+      <p class="section-kicker">以主题和来源文件夹串起内容，比传统分类更贴近 Obsidian 的生长方式。</p>
+    </div>
+    <div class="garden-grid">
+      <div class="panel topic-map">
+        {topics.length ? topics.map((topic) => (
+          <a class="topic-chip" href={`/archive/?topic=${encodeURIComponent(topic.name)}`}>{topic.name}<span>{topic.count}</span></a>
+        )) : <span class="section-kicker">暂无主题。</span>}
+      </div>
+      <div class="panel sync-card">
+        <div class="panel-title"><strong>发布统计</strong><span>garden</span></div>
+        <ul class="now-list">
+          <li><span>文稿</span><strong>{posts.filter((post) => post.type === "文稿").length} 篇</strong></li>
+          <li><span>手记</span><strong>{posts.filter((post) => post.type === "手记").length} 篇</strong></li>
+          <li><span>思考</span><strong>{posts.filter((post) => post.type === "思考").length} 篇</strong></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
