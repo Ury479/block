@@ -1,13 +1,9 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import manifest from "../data/sync-manifest.json";
 ---
 
-<BaseLayout title="Changelog · Ury 的知识花园">
-  <Header />
-  <main class="site-shell section">
+<PageLayout title="Changelog · Ury 的知识花园">
     <div class="section-head">
       <h2>Changelog</h2>
       <p class="section-kicker">记录站点同步和结构演进，参照数字花园常见的公开维护日志。</p>
@@ -22,6 +18,4 @@ import manifest from "../data/sync-manifest.json";
         <span class="post-meta">{manifest.provider}</span>
       </article>
     </div>
-  </main>
-  <Footer />
-</BaseLayout>
+</PageLayout>

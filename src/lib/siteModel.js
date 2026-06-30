@@ -1,6 +1,13 @@
-import posts from "../data/posts.json";
-import topics from "../data/topics.json";
-import manifest from "../data/sync-manifest.json";
+import postsRaw from "../data/posts.json";
+import topicsRaw from "../data/topics.json";
+import manifestRaw from "../data/sync-manifest.json";
+import { PostsSchema, TopicsSchema, ManifestSchema, validate } from "./schema.mjs";
+
+// 单一真相校验：import 时即用 Zod 校验数据形状。任何字段漂移在构建期早失败，
+// 而不是等到页面渲染才暴露。校验后导出的 posts/topics/manifest 类型有保证。
+const posts = validate(PostsSchema, postsRaw, "posts.json");
+const topics = validate(TopicsSchema, topicsRaw, "topics.json");
+const manifest = validate(ManifestSchema, manifestRaw, "sync-manifest.json");
 
 export const services = [
   {
@@ -93,7 +100,9 @@ export function getStats() {
     topics: topics.length,
     images: manifest.uploadedImages || 0,
     skipped: manifest.skipped || 0,
-    generatedAt: manifest.generatedAt || null,
+    // manifest 写的是 syncedAt（见 scripts/sync-obsidian.mjs）；此前误读 generatedAt，
+    // 导致该字段恒为 null。保留 generatedAt 作为对外稳定字段名，但数据源对齐 syncedAt。
+    generatedAt: manifest.syncedAt || null,
     skippedReasons: manifest.skippedReasons || {}
   };
 }

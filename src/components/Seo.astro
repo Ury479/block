@@ -1,0 +1,35 @@
+---
+// =============================================================================
+// SEO 组件 —— 走 BaseLayout 的 <slot name="head">（阶段 5）
+//
+// 注入 Open Graph / Twitter Card / canonical，让文章和页面可被社交平台正确预览、
+// 被搜索引擎索引。站点 URL 统一来自 Astro.site（= blog.config.site.url）。
+//
+// 用法（在任意页面或 PostLayout 内）：
+//   <Seo slot="head" title=… description=… type="article" />
+// =============================================================================
+const {
+  title,
+  description,
+  type = "website",
+  image
+} = Astro.props;
+
+const site = Astro.site;
+const canonical = site ? new URL(Astro.url.pathname, site).href : undefined;
+const ogImage = image
+  ? (image.startsWith("http") ? image : new URL(image, site).href)
+  : undefined;
+---
+
+{canonical && <link rel="canonical" href={canonical} />}
+<meta property="og:type" content={type} />
+{title && <meta property="og:title" content={title} />}
+{description && <meta property="og:description" content={description} />}
+{canonical && <meta property="og:url" content={canonical} />}
+{site && <meta property="og:site_name" content="Ury 的知识花园" />}
+{ogImage && <meta property="og:image" content={ogImage} />}
+<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+{title && <meta name="twitter:title" content={title} />}
+{description && <meta name="twitter:description" content={description} />}
+{ogImage && <meta name="twitter:image" content={ogImage} />}

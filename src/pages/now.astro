@@ -1,15 +1,11 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import posts from "../data/posts.json";
 
 const last = posts[0];
 ---
 
-<BaseLayout title="现在 · Ury 的知识花园">
-  <Header />
-  <main class="site-shell section">
+<PageLayout title="现在 · Ury 的知识花园">
     <div class="section-head">
       <h2>现在</h2>
       <p class="section-kicker">给路过的人一个坐标：我最近在整理什么、学习什么、准备把哪些笔记公开。</p>
@@ -36,6 +32,4 @@ const last = posts[0];
         )}
       </section>
     </div>
-  </main>
-  <Footer />
-</BaseLayout>
+</PageLayout>

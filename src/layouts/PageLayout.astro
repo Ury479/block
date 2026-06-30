@@ -1,0 +1,29 @@
+---
+// =============================================================================
+// PageLayout —— 标准 页框（Template，消除 7 处重复组装）
+//
+// 此前 archive/garden/now/sync/changelog/offer 等页面都各自手写：
+//   <BaseLayout><Header/><main class="site-shell section">…<Footer/></BaseLayout>
+// 违反 DRY，且 Header/Footer/nav 的组装散落。PageLayout 封装这套骨架，页面只填
+// 默认 slot（main 内容）+ 可选 props。开闭：新增页面无需重复组装页框。
+//
+// 文章页继续用 PostLayout（它有专属的 article-shell 双栏 + 来源侧栏）。
+// =============================================================================
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const {
+  title,
+  description,
+  mainClass = "site-shell section"
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class={mainClass}>
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>

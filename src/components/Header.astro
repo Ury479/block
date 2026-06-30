@@ -25,6 +25,23 @@ const nav = [
       ))}
       <a href="/rss.xml">RSS</a>
       <div id="translate" class="translate-control no-translate" aria-label="中英文翻译"></div>
+      <button id="theme-toggle" class="theme-toggle no-translate" type="button" aria-label="切换深浅色主题" title="切换深浅色"></button>
     </nav>
   </div>
 </header>
+<script>
+  // 主题切换：读写 localStorage，同步 data-theme（无 FOUC 初始脚本在 BaseLayout 已设好）。
+  const btn = document.querySelector("#theme-toggle");
+  const sync = () => {
+    const dark = document.documentElement.dataset.theme === "dark";
+    btn && (btn.textContent = dark ? "☀" : "☾");
+    btn && btn.setAttribute("aria-pressed", String(dark));
+  };
+  sync();
+  btn?.addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch {}
+    sync();
+  });
+</script>
