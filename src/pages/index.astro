@@ -4,41 +4,32 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import PostRow from "../components/PostRow.astro";
 import SyncFlow from "../components/SyncFlow.astro";
-import posts from "../data/posts.json";
-import topics from "../data/topics.json";
-import manifest from "../data/sync-manifest.json";
+import SectionHead from "../components/SectionHead.astro";
+import ProofGrid from "../components/ProofGrid.astro";
+import CockpitPanel from "../components/CockpitPanel.astro";
+import OfferGrid from "../components/OfferGrid.astro";
+import TypeRail from "../components/TypeRail.astro";
+import CollectionGrid from "../components/CollectionGrid.astro";
+import {
+  getCollections,
+  getProofItems,
+  getRecentPosts,
+  getTypeCounts,
+  manifest,
+  posts,
+  services,
+  topics
+} from "../lib/siteModel.js";
 
-const recent = posts.slice(0, 5);
-const typeCounts = ["文稿", "手记", "思考"].map((type) => ({
-  type,
-  count: posts.filter((post) => post.type === type).length
-}));
-const collections = [
-  {
-    name: "成功日记",
-    desc: "复盘、阶段目标、行动反馈，适合看见一个人如何把想法推进成结果。",
-    count: posts.filter((post) => post.sourceFolder?.includes("成功日记")).length,
-    href: "/archive/?q=成功日记"
-  },
-  {
-    name: "计算机编程",
-    desc: "AI、前端、后端、DevOps、项目排错，沉淀成可检索的工程知识库。",
-    count: posts.filter((post) => post.sourceFolder?.includes("计算机编程")).length,
-    href: "/archive/?q=计算机编程"
-  },
-  {
-    name: "恒洋听课笔记",
-    desc: "课程笔记和商业认知，适合快速了解学习路线与关键框架。",
-    count: posts.filter((post) => post.sourceFolder?.includes("恒洋听课笔记")).length,
-    href: "/archive/?q=恒洋听课笔记"
-  }
+const recent = getRecentPosts(5);
+const typeCounts = getTypeCounts();
+const collections = getCollections();
+const proofItems = getProofItems();
+const cockpitItems = [
+  { label: "路线", value: "AI 编程 · 项目上线 · 复盘系统" },
+  { label: "内容", value: `${posts.length} 篇从 Obsidian 同步的公开笔记` },
+  { label: "转化", value: "免费知识库 + 付费陪跑服务" }
 ];
-const offers = [
-  ["AI 编程陪跑", "从需求拆解、提示词、代码审查到部署上线，陪你把项目真实做出来。", "适合：想少走弯路的学习者"],
-  ["项目复盘诊断", "基于你的项目文档和卡点，拆出架构、交付、效率和商业化问题。", "适合：已有项目但推进慢"],
-  ["Obsidian 知识库搭建", "帮你把笔记、图片、发布流和博客站点连成可持续系统。", "适合：想建立个人知识资产"]
-];
-const totalImages = manifest.uploadedImages || 0;
 ---
 
 <BaseLayout>
@@ -52,79 +43,42 @@ const totalImages = manifest.uploadedImages || 0;
           <a class="button primary" href="#latest">开始阅读</a>
           <a class="button" href="/offer/">了解付费陪跑</a>
         </div>
-        <div class="proof-grid" aria-label="公开知识库统计">
-          <span><strong>{posts.length}</strong> 篇公开笔记</span>
-          <span><strong>{topics.length}</strong> 个知识主题</span>
-          <span><strong>{totalImages}</strong> 张图文资产</span>
-        </div>
+        <ProofGrid items={proofItems} />
       </div>
-      <aside class="panel cockpit-panel">
-        <div class="panel-title">
-          <strong>学习驾驶舱</strong>
-          <span>Now</span>
-        </div>
-        <ul class="now-list">
-          <li><span>路线</span><strong>AI 编程 · 项目上线 · 复盘系统</strong></li>
-          <li><span>内容</span><strong>{posts.length} 篇从 Obsidian 同步的公开笔记</strong></li>
-          <li><span>转化</span><strong>免费知识库 + 付费陪跑服务</strong></li>
-        </ul>
-        {recent[0] && <a class="button full" href={recent[0].url}>读最新：{recent[0].title}</a>}
-      </aside>
+      <CockpitPanel
+        title="学习驾驶舱"
+        eyebrow="Now"
+        items={cockpitItems}
+        cta={recent[0] && { href: recent[0].url, label: `读最新：${recent[0].title}` }}
+      />
     </section>
 
     <section class="site-shell section offer-section">
-      <div class="section-head">
-        <h2>把阅读变成结果</h2>
-        <p class="section-kicker">参考 Josh Comeau 的课程转化方式：先用高质量公开内容建立信任，再提供清晰、具体、可购买的下一步。</p>
-      </div>
-      <div class="offer-grid">
-        {offers.map(([title, desc, fit]) => (
-          <a class="offer-card" href="/offer/">
-            <span class="small-caps">{fit}</span>
-            <h3>{title}</h3>
-            <p>{desc}</p>
-            <strong>查看服务方式 →</strong>
-          </a>
-        ))}
-      </div>
+      <SectionHead
+        title="把阅读变成结果"
+        kicker="参考 Josh Comeau 的课程转化方式：先用高质量公开内容建立信任，再提供清晰、具体、可购买的下一步。"
+      />
+      <OfferGrid services={services} compact />
     </section>
 
     <section class="site-shell section">
-      <div class="section-head">
-        <h2>三种内容形态</h2>
-        <p class="section-kicker">参照 Mix Space 的内容模型，把正式文章、短记录与碎片思考分开，让首页不再只有单一列表。</p>
-      </div>
-      <div class="type-rail">
-        {typeCounts.map((item) => (
-          <a class="type-card" href={`/archive/?type=${encodeURIComponent(item.type)}`}>
-            <h3>{item.type}</h3>
-            <p>{item.count} 篇 · {item.type === "文稿" ? "长文、教程、复盘" : item.type === "手记" ? "近况、日报、现场记录" : "灵感、判断、问题意识"}</p>
-          </a>
-        ))}
-      </div>
+      <SectionHead
+        title="三种内容形态"
+        kicker="参照 Mix Space 的内容模型，把正式文章、短记录与碎片思考分开，让首页不再只有单一列表。"
+      />
+      <TypeRail items={typeCounts} />
     </section>
 
     <section class="site-shell section">
-      <div class="section-head">
-        <h2>精选合集</h2>
-        <p class="section-kicker">这次已把你指定的三个 Obsidian 目录同步成公开博客内容，并按来源聚合成入口。</p>
-      </div>
-      <div class="collection-grid">
-        {collections.map((item) => (
-          <a class="collection-card" href={item.href}>
-            <span class="small-caps">{item.count} 篇</span>
-            <h3>{item.name}</h3>
-            <p>{item.desc}</p>
-          </a>
-        ))}
-      </div>
+      <SectionHead
+        title="精选合集"
+        kicker="这次已把你指定的三个 Obsidian 目录同步成公开博客内容，并按来源聚合成入口。"
+      />
+      <CollectionGrid collections={collections} />
     </section>
 
     <section id="latest" class="site-shell section">
-      <div class="section-head">
-        <h2>最近更新</h2>
-        <p class="section-kicker">默认只展示已公开标记或指定同步的 Obsidian 文档。</p>
-      </div>
+      <SectionHead title="最近更新" kicker="默认只展示已公开标记或指定同步的 Obsidian 文档。" />
       {recent.length ? (
         <div class="post-list">
           {recent.map((post) => <PostRow post={post} />)}
@@ -137,10 +91,7 @@ const totalImages = manifest.uploadedImages || 0;
     </section>
 
     <section class="site-shell section">
-      <div class="section-head">
-        <h2>知识地图</h2>
-        <p class="section-kicker">主题不是硬分类，而是从笔记路径、标签与 frontmatter 中自然长出来的索引。</p>
-      </div>
+      <SectionHead title="知识地图" kicker="主题不是硬分类，而是从笔记路径、标签与 frontmatter 中自然长出来的索引。" />
       <div class="garden-grid">
         <div class="panel topic-map">
           {topics.length ? topics.map((topic) => (

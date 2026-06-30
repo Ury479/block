@@ -1,0 +1,26 @@
+---
+const { services = [], compact = false, ctaLabel = "查看服务方式 →", ctaHref = "/offer/" } = Astro.props;
+---
+
+<div class="offer-grid">
+  {services.map((service) => (
+    compact ? (
+      <a class="offer-card" href={ctaHref}>
+        <span class="small-caps">{service.fit}</span>
+        <h3>{service.title}</h3>
+        <p>{service.desc}</p>
+        <strong>{ctaLabel}</strong>
+      </a>
+    ) : (
+      <article class="offer-card">
+        <span class="small-caps">{service.price}</span>
+        <h3>{service.title}</h3>
+        <p>{service.desc}</p>
+        <ul>
+          {service.points.map((point) => <li>{point}</li>)}
+        </ul>
+        <a class="button full" href={`${ctaHref}?subject=${encodeURIComponent(service.title + "咨询")}`}>{ctaLabel}</a>
+      </article>
+    )
+  ))}
+</div>

@@ -1,0 +1,13 @@
+---
+const { collections = [] } = Astro.props;
+---
+
+<div class="collection-grid">
+  {collections.map((item) => (
+    <a class="collection-card" href={item.href}>
+      <span class="small-caps">{item.count} 篇</span>
+      <h3>{item.name}</h3>
+      <p>{item.desc}</p>
+    </a>
+  ))}
+</div>

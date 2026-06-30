@@ -1,0 +1,16 @@
+---
+const { title, eyebrow, items = [], cta } = Astro.props;
+---
+
+<aside class="panel cockpit-panel">
+  <div class="panel-title">
+    <strong>{title}</strong>
+    {eyebrow && <span>{eyebrow}</span>}
+  </div>
+  <ul class="now-list">
+    {items.map((item) => (
+      <li><span>{item.label}</span><strong>{item.value}</strong></li>
+    ))}
+  </ul>
+  {cta && <a class="button full" href={cta.href}>{cta.label}</a>}
+</aside>

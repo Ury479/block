@@ -64,3 +64,22 @@ npm run build
 - 图床相关变量，如 `IMAGE_BED_PROVIDER`、`LSKY_ENDPOINT`、`LSKY_TOKEN`。
 
 更推荐的生产流程：本地运行同步生成公开 Markdown 副本，提交站点仓库，再由 Netlify/Vercel 构建上线。这样云端不需要访问你的本地 Obsidian。
+
+## 开放 API
+
+站点提供静态 JSON API，数据来自 `src/lib/siteModel.js`，页面和 API 使用同一份内容模型：
+
+- `/api/v1/stats.json`
+- `/api/v1/posts.json`
+- `/api/v1/topics.json`
+- `/api/v1/collections.json`
+- `/api/v1/services.json`
+- `/api/v1/openapi.json`
+
+详细说明见 `docs/api.md`。
+
+## 扩展方式
+
+- 新增付费服务、精选合集、内容类型时，优先扩展 `src/lib/siteModel.js`。
+- 页面 UI 优先复用 `src/components/` 中的组件，不在页面内复制卡片结构。
+- 未来发布类任务先读 `docs/context-compact.md` 和 `skills/obsidian-blog-publisher/SKILL.md`。

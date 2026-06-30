@@ -2,27 +2,14 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import posts from "../data/posts.json";
+import CockpitPanel from "../components/CockpitPanel.astro";
+import OfferGrid from "../components/OfferGrid.astro";
+import { posts, services } from "../lib/siteModel.js";
 
-const services = [
-  {
-    title: "AI 编程陪跑",
-    price: "从 499 起",
-    desc: "陪你完成需求拆解、技术选型、提示词工作流、代码审查、部署上线。",
-    points: ["1 次项目诊断", "3 次异步反馈", "交付路线图"]
-  },
-  {
-    title: "项目复盘诊断",
-    price: "从 299 起",
-    desc: "把卡住的项目拆成可推进的任务、风险和下一步，让复盘变成增长。",
-    points: ["问题清单", "优先级排序", "改进方案"]
-  },
-  {
-    title: "Obsidian 知识库搭建",
-    price: "从 399 起",
-    desc: "从笔记结构、图床、发布脚本到博客部署，搭一条不会伤害源库的发布线。",
-    points: ["目录治理", "同步脚本", "上线配置"]
-  }
+const proofItems = [
+  { label: "内容", value: `${posts.length} 篇公开笔记作为信任样本` },
+  { label: "方法", value: "从 Obsidian 到 Vercel 的完整发布链路" },
+  { label: "方向", value: "AI 编程 / 复盘 / 项目交付" }
 ];
 ---
 
@@ -38,29 +25,10 @@ const services = [
           <a class="button" href="/archive/">先看公开内容</a>
         </div>
       </div>
-      <aside class="panel cockpit-panel">
-        <div class="panel-title"><strong>公开资产</strong><span>proof</span></div>
-        <ul class="now-list">
-          <li><span>内容</span><strong>{posts.length} 篇公开笔记作为信任样本</strong></li>
-          <li><span>方法</span><strong>从 Obsidian 到 Vercel 的完整发布链路</strong></li>
-          <li><span>方向</span><strong>AI 编程 / 复盘 / 项目交付</strong></li>
-        </ul>
-      </aside>
+      <CockpitPanel title="公开资产" eyebrow="proof" items={proofItems} />
     </section>
     <section class="site-shell section">
-      <div class="offer-grid">
-        {services.map((service) => (
-          <article class="offer-card">
-            <span class="small-caps">{service.price}</span>
-            <h3>{service.title}</h3>
-            <p>{service.desc}</p>
-            <ul>
-              {service.points.map((point) => <li>{point}</li>)}
-            </ul>
-            <a class="button full" href="mailto:hello@example.com?subject=课程陪跑咨询">咨询这个服务</a>
-          </article>
-        ))}
-      </div>
+      <OfferGrid services={services} ctaLabel="咨询这个服务" ctaHref="mailto:hello@example.com" />
     </section>
   </main>
   <Footer />

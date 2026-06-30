@@ -48,3 +48,14 @@
 3. 检查关键页面状态码。
 4. 检查横向溢出。
 5. 部署后访问生产 URL。
+
+## 5. 项目内 Skill
+
+已抽取项目级 skill：`skills/obsidian-blog-publisher/SKILL.md`。
+
+使用场景：
+
+1. 批量同步 Obsidian 公开目录。
+2. 新增付费服务、合集和内容类型。
+3. 扩展 `/api/v1` 静态 JSON API。
+4. 部署前做安全扫描、构建和浏览器验证。

@@ -1,0 +1,12 @@
+---
+const { items = [] } = Astro.props;
+---
+
+<div class="type-rail">
+  {items.map((item) => (
+    <a class="type-card" href={item.href}>
+      <h3>{item.type}</h3>
+      <p>{item.count} 篇 · {item.desc}</p>
+    </a>
+  ))}
+</div>

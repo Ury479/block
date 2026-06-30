@@ -1,0 +1,9 @@
+---
+const { items = [] } = Astro.props;
+---
+
+<div class="proof-grid" aria-label="公开知识库统计">
+  {items.map((item) => (
+    <span><strong>{item.value}</strong> {item.label}</span>
+  ))}
+</div>

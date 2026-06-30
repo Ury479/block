@@ -20,6 +20,8 @@
 - 不要只按一级目录生成主题；大目录会把知识地图压扁，应该按业务栏目推导 topic。
 - 不要先追求全量公开；先做安全过滤，再做视觉升级和部署。
 - 不要用一次性命令散落发布规则；公开目录、黑名单、最小字数必须沉淀到 `blog.config.mjs`。
+- 不要在页面里重复写服务卡、合集和统计；新增可售服务或公开合集时优先扩展 `src/lib/siteModel.js`。
+- 不要破坏 `/api/v1` 响应结构；需要动态查询或分页时新增 `/api/v2`。
 
 ## 本地常用命令
 
@@ -29,6 +31,13 @@ npm run build
 npm run dev
 vercel --prod --yes
 ```
+
+## 可复用抽象
+
+- 项目上下文压缩在 `docs/context-compact.md`。
+- API 说明在 `docs/api.md`。
+- 项目级发布 skill 在 `skills/obsidian-blog-publisher/SKILL.md`。
+- 服务、合集、内容类型、统计和 API 响应统一从 `src/lib/siteModel.js` 扩展。
 
 ## 前端设计约束
 

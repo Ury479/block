@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian Blog Publisher"
+  short_description: "Publish safe Obsidian notes to a paid-conversion personal blog."
+  default_prompt: "Use this skill to safely sync Obsidian notes, preserve source vaults, update the blog UI, verify with browser QA, and deploy to Vercel."
