@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
-    "build:local": "npm run sync:safe && astro build",
+    "build:local": "npm run sync:publish-roots && astro build",
     "preview": "astro preview --host 127.0.0.1",
     "sync": "node scripts/sync-obsidian.mjs",
     "sync:safe": "node scripts/sync-obsidian.mjs --safe",
+    "sync:publish-roots": "node scripts/sync-obsidian.mjs --publish-roots",
     "sync:file": "node scripts/sync-obsidian.mjs --file"
   },
   "dependencies": {

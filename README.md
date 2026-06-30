@@ -1,6 +1,6 @@
 # Ury 的知识花园
 
-一个静态优先的个人博客：公开页面由 Astro 生成，内容从本地 Obsidian 库单向同步，图片通过可插拔图床 provider 改写。
+一个静态优先的个人知识博客：公开页面由 Astro 生成，内容从本地 Obsidian 库单向同步，图片通过可插拔图床 provider 改写。当前定位是“公开知识库 + 课程陪跑/咨询转化入口”。
 
 ## 设计参照
 
@@ -13,11 +13,11 @@
 
 ```bash
 npm install
-npm run sync:safe
+npm run sync:publish-roots
 npm run dev
 ```
 
-`sync:safe` 只导入 frontmatter 中带有 `publish: true` 的 Obsidian 笔记。
+`sync:publish-roots` 会同步 `blog.config.mjs` 中配置的公开目录，并自动跳过过短、模板和敏感内容。`sync:safe` 仍只导入 frontmatter 中带有 `publish: true` 的 Obsidian 笔记。
 
 ## 发布单篇 Obsidian 文档
 
@@ -50,7 +50,8 @@ Netlify 和 Vercel 都已配置。云端构建命令是 `npm run build`，只构
 本地同步并构建可用：
 
 ```bash
-npm run build:local
+npm run sync:publish-roots
+npm run build
 ```
 
 - Netlify：构建命令 `npm run build`，发布目录 `dist`。

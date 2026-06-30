@@ -13,6 +13,32 @@ const typeCounts = ["文稿", "手记", "思考"].map((type) => ({
   type,
   count: posts.filter((post) => post.type === type).length
 }));
+const collections = [
+  {
+    name: "成功日记",
+    desc: "复盘、阶段目标、行动反馈，适合看见一个人如何把想法推进成结果。",
+    count: posts.filter((post) => post.sourceFolder?.includes("成功日记")).length,
+    href: "/archive/?q=成功日记"
+  },
+  {
+    name: "计算机编程",
+    desc: "AI、前端、后端、DevOps、项目排错，沉淀成可检索的工程知识库。",
+    count: posts.filter((post) => post.sourceFolder?.includes("计算机编程")).length,
+    href: "/archive/?q=计算机编程"
+  },
+  {
+    name: "恒洋听课笔记",
+    desc: "课程笔记和商业认知，适合快速了解学习路线与关键框架。",
+    count: posts.filter((post) => post.sourceFolder?.includes("恒洋听课笔记")).length,
+    href: "/archive/?q=恒洋听课笔记"
+  }
+];
+const offers = [
+  ["AI 编程陪跑", "从需求拆解、提示词、代码审查到部署上线，陪你把项目真实做出来。", "适合：想少走弯路的学习者"],
+  ["项目复盘诊断", "基于你的项目文档和卡点，拆出架构、交付、效率和商业化问题。", "适合：已有项目但推进慢"],
+  ["Obsidian 知识库搭建", "帮你把笔记、图片、发布流和博客站点连成可持续系统。", "适合：想建立个人知识资产"]
+];
+const totalImages = manifest.uploadedImages || 0;
 ---
 
 <BaseLayout>
@@ -20,24 +46,47 @@ const typeCounts = ["文稿", "手记", "思考"].map((type) => ({
   <main>
     <section class="site-shell hero">
       <div>
-        <h1>把散落的笔记，整理成能被重新遇见的知识花园。</h1>
-        <p class="hero-lede">这里同步本地 Obsidian 中适合公开的文章、手记与思考。内容保留 Markdown 的可携带性，阅读体验则交给安静、耐看的中文排版。</p>
+        <h1>把 {posts.length}+ 篇学习笔记，变成可复用的成长系统。</h1>
+        <p class="hero-lede">这里公开沉淀 AI 编程、项目复盘、成功日记和课程笔记。你可以免费阅读，也可以进入付费陪跑，把知识转成真实项目进度。</p>
         <div class="hero-actions">
-          <a class="button primary" href="#latest">读最近更新</a>
-          <a class="button" href="/sync/">查看同步流程</a>
+          <a class="button primary" href="#latest">开始阅读</a>
+          <a class="button" href="/offer/">了解付费陪跑</a>
+        </div>
+        <div class="proof-grid" aria-label="公开知识库统计">
+          <span><strong>{posts.length}</strong> 篇公开笔记</span>
+          <span><strong>{topics.length}</strong> 个知识主题</span>
+          <span><strong>{totalImages}</strong> 张图文资产</span>
         </div>
       </div>
-      <aside class="panel now-panel">
+      <aside class="panel cockpit-panel">
         <div class="panel-title">
-          <strong>现在</strong>
+          <strong>学习驾驶舱</strong>
           <span>Now</span>
         </div>
         <ul class="now-list">
-          <li><span>本周</span><strong>整理可公开的学习复盘与项目笔记</strong></li>
-          <li><span>写作</span><strong>把长文、手记、灵感拆成三种内容形态</strong></li>
-          <li><span>系统</span><strong>Obsidian 只读同步，图片经图床转存</strong></li>
+          <li><span>路线</span><strong>AI 编程 · 项目上线 · 复盘系统</strong></li>
+          <li><span>内容</span><strong>{posts.length} 篇从 Obsidian 同步的公开笔记</strong></li>
+          <li><span>转化</span><strong>免费知识库 + 付费陪跑服务</strong></li>
         </ul>
+        {recent[0] && <a class="button full" href={recent[0].url}>读最新：{recent[0].title}</a>}
       </aside>
+    </section>
+
+    <section class="site-shell section offer-section">
+      <div class="section-head">
+        <h2>把阅读变成结果</h2>
+        <p class="section-kicker">参考 Josh Comeau 的课程转化方式：先用高质量公开内容建立信任，再提供清晰、具体、可购买的下一步。</p>
+      </div>
+      <div class="offer-grid">
+        {offers.map(([title, desc, fit]) => (
+          <a class="offer-card" href="/offer/">
+            <span class="small-caps">{fit}</span>
+            <h3>{title}</h3>
+            <p>{desc}</p>
+            <strong>查看服务方式 →</strong>
+          </a>
+        ))}
+      </div>
     </section>
 
     <section class="site-shell section">
@@ -50,6 +99,22 @@ const typeCounts = ["文稿", "手记", "思考"].map((type) => ({
           <a class="type-card" href={`/archive/?type=${encodeURIComponent(item.type)}`}>
             <h3>{item.type}</h3>
             <p>{item.count} 篇 · {item.type === "文稿" ? "长文、教程、复盘" : item.type === "手记" ? "近况、日报、现场记录" : "灵感、判断、问题意识"}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="site-shell section">
+      <div class="section-head">
+        <h2>精选合集</h2>
+        <p class="section-kicker">这次已把你指定的三个 Obsidian 目录同步成公开博客内容，并按来源聚合成入口。</p>
+      </div>
+      <div class="collection-grid">
+        {collections.map((item) => (
+          <a class="collection-card" href={item.href}>
+            <span class="small-caps">{item.count} 篇</span>
+            <h3>{item.name}</h3>
+            <p>{item.desc}</p>
           </a>
         ))}
       </div>

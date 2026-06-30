@@ -27,15 +27,18 @@ await clearGeneratedPosts();
 const provider = createImageProvider();
 const posts = [];
 let skipped = 0;
+const skippedReasons = {};
 let uploadedImages = 0;
 
 for (const sourcePath of files) {
   const raw = await readFile(sourcePath, "utf8");
   const parsed = parseMatter(raw);
   const explicitlyPublished = parsed.data?.[config.publish.frontmatterFlag] === true;
+  const publishCheck = shouldPublish(sourcePath, parsed, raw, explicitlyPublished);
 
-  if (args.safe && !args.file && !args.all && !explicitlyPublished) {
+  if (!publishCheck.ok) {
     skipped += 1;
+    skippedReasons[publishCheck.reason] = (skippedReasons[publishCheck.reason] || 0) + 1;
     continue;
   }
 
@@ -43,8 +46,13 @@ for (const sourcePath of files) {
   const imageResult = await rewriteImages(parsed.content, sourcePath, provider);
   uploadedImages += imageResult.uploaded;
   const content = rewriteInternalLinks(imageResult.content);
+  const outputPath = path.join(postsDir, `${meta.slug}.md`);
+  const layoutPath = path
+    .relative(path.dirname(outputPath), path.join(root, "src/layouts/PostLayout.astro"))
+    .split(path.sep)
+    .join("/");
   const output = stringifyMatter({
-    layout: "../../layouts/PostLayout.astro",
+    layout: layoutPath,
     title: meta.title,
     description: meta.excerpt,
     date: meta.date,
@@ -56,7 +64,6 @@ for (const sourcePath of files) {
     sourceFolder: meta.sourceFolder
   }, content.trim() + "\n");
 
-  const outputPath = path.join(postsDir, `${meta.slug}.md`);
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, output, "utf8");
   posts.push({
@@ -82,20 +89,23 @@ await writeJson("sync-manifest.json", {
   sourceFiles: files.length,
   published: posts.length,
   skipped,
+  skippedReasons,
   uploadedImages,
-  mode: args.file ? "single-file" : args.all ? "all" : args.safe ? "safe" : "default"
+  mode: args.file ? "single-file" : args.publishRoots ? "publish-roots" : args.all ? "all" : args.safe ? "safe" : "default"
 });
 
 console.log(
   `Synced ${posts.length} post(s), skipped ${skipped}, processed ${uploadedImages} image(s) with ${provider.name}.`
 );
+if (Object.keys(skippedReasons).length) console.log(JSON.stringify(skippedReasons, null, 2));
 
 function parseArgs(argv) {
-  const result = { safe: false, all: false, file: "" };
+  const result = { safe: false, all: false, publishRoots: false, file: "" };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--safe") result.safe = true;
     if (arg === "--all") result.all = true;
+    if (arg === "--publish-roots") result.publishRoots = true;
     if (arg === "--file") result.file = argv[i + 1] || "";
   }
   return result;
@@ -123,13 +133,43 @@ async function resolveSourceFiles() {
     }
     return [requested];
   }
-  const entries = await fg(config.obsidian.include, {
+  const include = args.publishRoots
+    ? config.publish.publicRoots.map((rootPath) => `${rootPath.replace(/\/$/, "")}/**/*.md`)
+    : config.obsidian.include;
+  const entries = await fg(include, {
     cwd: vault,
     absolute: true,
     onlyFiles: true,
     ignore: config.obsidian.exclude
   });
   return entries.sort();
+}
+
+function shouldPublish(sourcePath, parsed, raw, explicitlyPublished) {
+  if (args.file || args.all) return { ok: true };
+  const rel = path.relative(vault, sourcePath);
+  const plain = toPlainText(parsed.content);
+
+  if (isDenied(rel)) return { ok: false, reason: "deny-pattern" };
+  if (hasDeniedContent(raw)) return { ok: false, reason: "sensitive-content" };
+  if (plain.length < (config.publish.minChars || 0)) return { ok: false, reason: "too-short" };
+  if (args.publishRoots) return { ok: true };
+  if (args.safe && !explicitlyPublished) return { ok: false, reason: "missing-publish-flag" };
+  if (config.publish.safeByDefault && !explicitlyPublished) return { ok: false, reason: "missing-publish-flag" };
+  return { ok: true };
+}
+
+function isDenied(rel) {
+  return config.publish.denyPatterns.some((pattern) =>
+    rel.toLowerCase().includes(String(pattern).toLowerCase())
+  );
+}
+
+function hasDeniedContent(raw) {
+  return (config.publish.contentDenyRegexes || []).some((pattern) => {
+    const regex = new RegExp(pattern, "i");
+    return regex.test(raw);
+  });
 }
 
 async function clearGeneratedPosts() {
@@ -151,7 +191,7 @@ async function buildMetadata(sourcePath, parsed) {
   const plain = toPlainText(parsed.content);
   const excerpt = String(parsed.data.description || plain.slice(0, 120)).replace(/\s+/g, " ").trim();
   const tags = normalizeTags(parsed.data.tags);
-  const topic = String(parsed.data.topic || tags[0] || rel.split(path.sep)[0] || config.publish.defaultTopic);
+  const topic = String(parsed.data.topic || tags[0] || inferTopic(rel) || config.publish.defaultTopic);
   const type = String(parsed.data.type || inferType(rel, plain));
   const stats = readingTime(plain);
   return {
@@ -184,9 +224,20 @@ function normalizeTags(tags) {
 }
 
 function inferType(rel, plain) {
+  if (/成功日记|日报|复盘|周复盘|now|现在/i.test(rel)) return "手记";
+  if (/恒洋听课笔记|听课|课程|讲座/i.test(rel)) return "文稿";
+  if (/错题|报错|bug|问题|混淆点/i.test(rel)) return "思考";
   if (/日报|复盘|now|现在/i.test(rel)) return "手记";
   if (plain.length < 800) return "思考";
   return config.publish.defaultType;
+}
+
+function inferTopic(rel) {
+  const parts = rel.split(path.sep);
+  if (rel.includes(`个人管理${path.sep}成功日记`)) return "成功日记";
+  if (rel.includes(`个人管理${path.sep}恒洋听课笔记`)) return "恒洋听课笔记";
+  if (parts[0] === "计算机编程" && parts[1]) return parts[1];
+  return parts[0];
 }
 
 function toPlainText(markdown) {

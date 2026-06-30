@@ -3,7 +3,7 @@ const { post } = Astro.props;
 const date = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(post.date));
 ---
 
-<a class="post-row" href={post.url} data-type={post.type} data-topic={post.topic} data-title={post.title}>
+<a class="post-row" href={post.url} data-type={post.type} data-topic={post.topic} data-title={post.title} data-source={post.sourceFolder}>
   <span class="post-date">{date}</span>
   <span>
     <h3>{post.title}</h3>

@@ -1,10 +1,15 @@
 {
-  "syncedAt": "2026-06-27T05:54:33.390Z",
+  "syncedAt": "2026-06-30T05:02:00.997Z",
   "vaultName": "Obsidian Vault",
   "provider": "local",
-  "sourceFiles": 523,
-  "published": 0,
-  "skipped": 523,
-  "uploadedImages": 0,
-  "mode": "safe"
+  "sourceFiles": 400,
+  "published": 332,
+  "skipped": 68,
+  "skippedReasons": {
+    "too-short": 46,
+    "deny-pattern": 15,
+    "sensitive-content": 7
+  },
+  "uploadedImages": 103,
+  "mode": "publish-roots"
 }

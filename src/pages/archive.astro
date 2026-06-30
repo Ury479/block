@@ -35,7 +35,7 @@ import posts from "../data/posts.json";
     const apply = () => {
       const query = search.value.trim().toLowerCase();
       for (const row of rows) {
-        const haystack = row.textContent.toLowerCase();
+        const haystack = `${row.textContent} ${row.dataset.type || ""} ${row.dataset.topic || ""} ${row.dataset.source || ""}`.toLowerCase();
         row.style.display = !query || haystack.includes(query) ? "" : "none";
       }
     };

@@ -17,10 +17,11 @@ import manifest from "../data/sync-manifest.json";
     <section class="section">
       <div class="section-head">
         <h2>上传文档</h2>
-        <p class="section-kicker">安全默认值是只同步 <code>publish: true</code> 的笔记；临时发布可指定单篇文件。</p>
+        <p class="section-kicker">安全默认值是只同步 <code>publish: true</code> 的笔记；本项目也支持批量同步配置里的公开目录。</p>
       </div>
       <div class="panel sync-card">
-        <pre><code>npm run sync:safe
+<pre><code>npm run sync:safe
+npm run sync:publish-roots
 npm run sync -- --file "/Users/ury/Documents/Obsidian Vault/路径/文章.md"
 IMAGE_BED_PROVIDER=picgo npm run sync:safe
 IMAGE_BED_PROVIDER=lsky LSKY_ENDPOINT="https://example.com/api/v1/upload" LSKY_TOKEN="***" npm run sync:safe</code></pre>
