@@ -145,6 +145,31 @@ img {
   background: rgba(96, 119, 90, 0.1);
 }
 
+.translate-control {
+  display: inline-flex;
+  align-items: center;
+  min-width: 84px;
+  margin-left: 4px;
+}
+
+.translate-control select,
+.translateSelectLanguage {
+  min-height: 34px;
+  max-width: 128px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 251, 244, 0.72);
+  color: var(--muted);
+  font: 13px/1 ui-sans-serif, system-ui, sans-serif;
+}
+
+.translate-control select:hover,
+.translateSelectLanguage:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.42fr) minmax(300px, 0.58fr);

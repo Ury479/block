@@ -22,6 +22,8 @@
 - 不要用一次性命令散落发布规则；公开目录、黑名单、最小字数必须沉淀到 `blog.config.mjs`。
 - 不要在页面里重复写服务卡、合集和统计；新增可售服务或公开合集时优先扩展 `src/lib/siteModel.js`。
 - 不要破坏 `/api/v1` 响应结构；需要动态查询或分页时新增 `/api/v2`。
+- RSS 里的 title、description、link、guid 都必须走 XML 转义；路径中出现 `&` 会直接导致浏览器 XML parse error。
+- 翻译能力优先复用 `i18n-jsautotranslate`，不要手写大段中英词典或自建翻译引擎。
 
 ## 本地常用命令
 

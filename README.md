@@ -78,6 +78,10 @@ npm run build
 
 详细说明见 `docs/api.md`。
 
+## 中英文翻译
+
+站点复用 GitHub 项目 `xnx3/translate` 的 npm 包 `i18n-jsautotranslate`，在浏览器端提供中文 / English 切换。集成点在 `src/layouts/BaseLayout.astro` 和 `src/components/Header.astro`，代码块、输入框、脚本和样式会被跳过，避免翻译破坏技术内容。
+
 ## 扩展方式
 
 - 新增付费服务、精选合集、内容类型时，优先扩展 `src/lib/siteModel.js`。

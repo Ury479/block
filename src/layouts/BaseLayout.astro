@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import translateScriptUrl from "i18n-jsautotranslate/index.js?url";
 
 const {
   title = "Ury 的知识花园",
@@ -17,5 +18,31 @@ const {
   </head>
   <body>
     <slot />
+    <script is:inline src={translateScriptUrl}></script>
+    <script is:inline>
+      (() => {
+        const initTranslate = () => {
+          if (!window.translate) return;
+          const translate = window.translate;
+
+          translate.language.setLocal("chinese_simplified");
+          translate.language.translateLanguagesRange = ["chinese_simplified", "english"];
+          translate.selectLanguageTag.languages = "chinese_simplified,english";
+          translate.selectLanguageTag.documentId = "translate";
+          translate.service.use("client.edge");
+          translate.ignore.tag.push("pre", "code", "kbd", "samp", "script", "style", "textarea", "input");
+          translate.ignore.class.push("no-translate", null);
+          translate.ignore.class.push("astro-code", null);
+          translate.listener.start();
+          translate.execute();
+        };
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", initTranslate, { once: true });
+        } else {
+          initTranslate();
+        }
+      })();
+    </script>
   </body>
 </html>
