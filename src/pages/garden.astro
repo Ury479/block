@@ -1,14 +1,10 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import topics from "../data/topics.json";
 import posts from "../data/posts.json";
 ---
 
-<BaseLayout title="知识地图 · Ury 的知识花园">
-  <Header />
-  <main class="site-shell section">
+<PageLayout title="知识地图 · Ury 的知识花园">
     <div class="section-head">
       <h2>知识地图</h2>
       <p class="section-kicker">以主题和来源文件夹串起内容，比传统分类更贴近 Obsidian 的生长方式。</p>
@@ -28,6 +24,4 @@ import posts from "../data/posts.json";
         </ul>
       </div>
     </div>
-  </main>
-  <Footer />
-</BaseLayout>
+</PageLayout>

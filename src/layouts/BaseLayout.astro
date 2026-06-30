@@ -12,9 +12,23 @@ const {
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
+    <!-- 无 FOUC 主题初始化：在首帧 paint 前根据 localStorage / 系统偏好设置 data-theme -->
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = saved || (prefersDark ? "dark" : "light");
+          document.documentElement.dataset.theme = theme;
+        } catch {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f8f3ea" />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <slot />

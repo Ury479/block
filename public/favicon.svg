@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 品牌标识：与 Header brand-mark 一致的苔绿圆环 + "雨" 字 -->
+  <circle cx="32" cy="32" r="30" fill="#fbfbf4" stroke="#31472f" stroke-width="2"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Kaiti SC, LXGW WenKai, serif" font-size="34" fill="#31472f">雨</text>
+</svg>

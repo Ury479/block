@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap 在阶段 5 加入 @astrojs/sitemap 后取消注释：
+# Sitemap: https://ury-blog.vercel.app/sitemap-index.xml

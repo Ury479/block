@@ -1,14 +1,10 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import SyncFlow from "../components/SyncFlow.astro";
 import manifest from "../data/sync-manifest.json";
 ---
 
-<BaseLayout title="同步状态 · Ury 的知识花园">
-  <Header />
-  <main class="site-shell section">
+<PageLayout title="同步状态 · Ury 的知识花园">
     <div class="section-head">
       <h2>Obsidian 同步</h2>
       <p class="section-kicker">这是单向发布工具：读取本地库，生成公开副本，处理图片链接，不写回、不重命名、不移动 Obsidian 原文件。</p>
@@ -27,6 +23,4 @@ IMAGE_BED_PROVIDER=picgo npm run sync:safe
 IMAGE_BED_PROVIDER=lsky LSKY_ENDPOINT="https://example.com/api/v1/upload" LSKY_TOKEN="***" npm run sync:safe</code></pre>
       </div>
     </section>
-  </main>
-  <Footer />
-</BaseLayout>
+</PageLayout>

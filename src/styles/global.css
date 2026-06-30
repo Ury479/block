@@ -1,25 +1,5 @@
-@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.css");
-
-:root {
-  color-scheme: light;
-  --paper: #f8f3ea;
-  --paper-deep: #efe6d7;
-  --ink: #27231d;
-  --muted: #746a5d;
-  --soft: #9b8d7c;
-  --line: rgba(61, 48, 33, 0.14);
-  --line-strong: rgba(61, 48, 33, 0.24);
-  --moss: #60775a;
-  --moss-dark: #31472f;
-  --clay: #b5644c;
-  --gold: #b99956;
-  --surface: rgba(255, 251, 244, 0.72);
-  --dark: #202417;
-  --dark-2: #2b321f;
-  --shadow: 0 20px 70px rgba(70, 49, 24, 0.09);
-  --radius: 6px;
-  --max: 1180px;
-}
+/* 设计 token（变量、字体）集中在 tokens.css；阶段 5 暗色模式在此覆盖。 */
+@import "./tokens.css";
 
 * {
   box-sizing: border-box;
@@ -168,6 +148,28 @@ img {
 .translateSelectLanguage:hover {
   border-color: var(--line-strong);
   color: var(--ink);
+}
+
+/* 主题切换按钮：与 nav 链接同尺寸，纯符号，无背景 */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 
 .hero {

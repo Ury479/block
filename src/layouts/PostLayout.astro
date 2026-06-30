@@ -2,12 +2,14 @@
 import BaseLayout from "./BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Seo from "../components/Seo.astro";
 
 const fm = Astro.props.frontmatter;
 const date = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "long", day: "numeric" }).format(new Date(fm.date));
 ---
 
 <BaseLayout title={`${fm.title} · Ury 的知识花园`} description={fm.description}>
+  <Seo slot="head" title={fm.title} description={fm.description} type="article" />
   <Header />
   <main class="site-shell article-shell">
     <article>
@@ -23,6 +25,7 @@ const date = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "long", 
       <div class="article-content">
         <slot />
       </div>
+      <slot name="after-article" />
     </article>
     <aside class="panel article-side">
       <div class="panel-title">
@@ -31,6 +34,7 @@ const date = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "long", 
       <p class="section-kicker">这是一份从 Obsidian 生成的公开副本，源库不会被改写。</p>
       <p class="small-caps">{fm.sourceFolder}</p>
       <p><a class="button" href="/archive/">返回归档</a></p>
+      <slot name="aside" />
     </aside>
   </main>
   <Footer />

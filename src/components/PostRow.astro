@@ -5,9 +5,9 @@ const date = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit
 
 <a class="post-row" href={post.url} data-type={post.type} data-topic={post.topic} data-title={post.title} data-source={post.sourceFolder}>
   <span class="post-date">{date}</span>
-  <span>
+  <div class="post-body">
     <h3>{post.title}</h3>
     <p>{post.excerpt || "这篇文章来自 Obsidian 同步副本。"}</p>
-  </span>
+  </div>
   <span class="post-meta">{post.type} · {post.readingMinutes || 1} 分钟</span>
 </a>
