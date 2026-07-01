@@ -1,4 +1,5 @@
 ---
+import SeasonSwitcher from "./SeasonSwitcher.astro";
 const current = Astro.url.pathname;
 const nav = [
   ["/", "首页"],
@@ -25,6 +26,7 @@ const nav = [
       ))}
       <a href="/rss.xml">RSS</a>
       <div id="translate" class="translate-control no-translate" aria-label="中英文翻译"></div>
+      <SeasonSwitcher />
       <button id="theme-toggle" class="theme-toggle no-translate" type="button" aria-label="切换深浅色主题" title="切换深浅色"></button>
     </nav>
   </div>

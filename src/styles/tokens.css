@@ -41,6 +41,10 @@
   --shadow: 0 20px 70px rgba(70, 49, 24, 0.09);
   --radius: 6px;
   --max: 1180px;
+
+  /* 季节氛围色：body 顶部径向晕染的主色。四季皮肤在此切换辨识度最高的情绪色。
+     默认值与原硬编码 rgba(185,153,86,0.1) 等价（金色），保证不引入季节时视觉零变化。 */
+  --glow: rgba(185, 153, 86, 0.1);
 }
 
 /* =============================================================================
@@ -69,4 +73,78 @@
   --surface: rgba(40, 44, 33, 0.72);
   --shadow: 0 20px 70px rgba(0, 0, 0, 0.32);
 }
+
+/* =============================================================================
+ * 四季皮肤（data-season）—— 与明暗（data-theme）正交叠加。
+ *
+ * 设计原则：季节只改「色相相关 token」——强调色 moss/clay/gold、氛围 glow、
+ * 以及 ink/muted/line 的色温微调。绝不改 paper/surface 的明度（那是明暗模式的
+ * 独占职责）。这样任一季节都能与 light/dark 自由组合，互不冲突。
+ *
+ * 季节辨识度主要来自：① 强调色色相 ② body 径向 glow ③ ink 色温倾向。
+ * 调色板保持低饱和、书卷气，符合 AGENTS.md「保留霞鹭文楷中文阅读气质」约束。
+ *
+ * 新增季节（开闭）：只追加一个 [data-season="..."] 块 + src/lib/seasons.mjs 配置。
+ * ========================================================================== */
+
+/* 春 · 嫩芽初生：苔绿偏嫩，樱粉暖意，嫩金点睛 */
+:root[data-season="spring"] {
+  --moss: #6fa05a;
+  --moss-dark: #4f7a3c;
+  --clay: #d68a8a;
+  --gold: #c9a84a;
+  --glow: rgba(111, 160, 90, 0.12);
+  --ink: #28301f;          /* 偏绿调墨 */
+  --muted: #6f7560;
+  --soft: #949a82;
+  --line: rgba(45, 60, 35, 0.14);
+  --line-strong: rgba(45, 60, 35, 0.24);
+}
+
+/* 夏 · 茂盛清凉：深松绿，珊瑚暖，青金沉静 */
+:root[data-season="summer"] {
+  --moss: #3f6b4a;
+  --moss-dark: #2c4d35;
+  --clay: #c96a52;
+  --gold: #9fb06b;
+  --glow: rgba(63, 107, 74, 0.11);
+  --ink: #1f2a26;          /* 偏青调墨 */
+  --muted: #5e6b65;
+  --soft: #828f87;
+  --line: rgba(31, 50, 45, 0.13);
+  --line-strong: rgba(31, 50, 45, 0.23);
+}
+
+/* 秋 · 书卷琥珀：苔绿沉静，赭石温厚，琥珀金黄（默认基调的强化版） */
+:root[data-season="autumn"] {
+  --moss: #6a7a4a;
+  --moss-dark: #4d5a33;
+  --clay: #b5683a;
+  --gold: #b8821e;
+  --glow: rgba(184, 130, 30, 0.13);
+  --ink: #2a231a;          /* 偏暖褐墨 */
+  --muted: #756650;
+  --soft: #9a8d7c;
+  --line: rgba(60, 45, 28, 0.14);
+  --line-strong: rgba(60, 45, 28, 0.24);
+}
+
+/* 冬 · 清冷克制：墨青冷峻，寒梅一点红，霜银收敛 */
+:root[data-season="winter"] {
+  --moss: #5a7068;
+  --moss-dark: #3f504a;
+  --clay: #b05a5a;
+  --gold: #a8a89c;
+  --glow: rgba(90, 112, 104, 0.11);
+  --ink: #1f262a;          /* 偏冷青墨 */
+  --muted: #5f6a70;
+  --soft: #828c92;
+  --line: rgba(31, 40, 46, 0.13);
+  --line-strong: rgba(31, 40, 46, 0.23);
+}
+
+/* 暗色模式下，季节氛围色同样生效（季节块在后，覆盖暗色块的色相 token）。
+   注意：暗色块已先定义，季节块在此追加，故 [data-theme=dark][data-season=x]
+   时季节的 moss/clay/gold/glow 会覆盖暗色的，达成「暗色 + 季节氛围」。上面四个
+   季节块用 :root[data-season] 选择器，对 data-theme=light/dark 都生效。 */
 

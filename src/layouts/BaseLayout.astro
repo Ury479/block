@@ -12,14 +12,32 @@ const {
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <!-- 无 FOUC 主题初始化：在首帧 paint 前根据 localStorage / 系统偏好设置 data-theme -->
+    <!-- 无 FOUC 主题 + 季节初始化：首帧 paint 前设置 data-theme（明暗）与 data-season（四季皮肤）。
+         明暗：localStorage.theme，无则跟系统 prefers-color-scheme。
+         季节：localStorage.season，无则按当前月份自动（3-5春/6-8夏/9-11秋/12-2冬）；
+               用户手动选过之后（season-set=1）尊重其选择，不再自动覆盖。 -->
     <script is:inline>
       (() => {
+        const doc = document.documentElement;
         try {
-          const saved = localStorage.getItem("theme");
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          const theme = saved || (prefersDark ? "dark" : "light");
-          document.documentElement.dataset.theme = theme;
+          // 明暗
+          const savedTheme = localStorage.getItem("theme");
+          const theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          doc.dataset.theme = theme;
+          // 季节
+          const savedSeason = localStorage.getItem("season");
+          const seasonSet = localStorage.getItem("season-set") === "1";
+          let season = savedSeason;
+          if (!season) {
+            const m = new Date().getMonth() + 1;
+            season = (m >= 3 && m <= 5) ? "spring" : (m >= 6 && m <= 8) ? "summer" : (m >= 9 && m <= 11) ? "autumn" : "winter";
+          }
+          doc.dataset.season = season;
+          // theme-color 跟随明暗（季节不改 paper 明度，故只按 light/dark 切换浏览器顶栏色）
+          const tc = document.querySelector('meta[name="theme-color"]');
+          if (tc) tc.setAttribute("content", theme === "dark" ? "#1a1d16" : "#f8f3ea");
+          // 未手动设过季节时，标记为自动（供 SeasonSwitcher 显示「自动」态）
+          if (!seasonSet) doc.dataset.seasonAuto = "1";
         } catch {}
       })();
     </script>

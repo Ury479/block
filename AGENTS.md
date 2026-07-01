@@ -26,6 +26,8 @@
 - RSS 还必须 sanitize 非法 XML 1.0 控制字符；`@astrojs/rss` 不剥离它们，源笔记正文偶含此类字符会让 RSS 解析器报错，故保留 `sanitizeXml()` 预处理。
 - RSS 站点 URL 必须用 `context.site`（astro.config），不要再 `config.site.url.replace(/\/$/,"")`，避免尾斜杠不一致导致 link/guid 漂移。
 - 暗色模式用「直接覆盖原始 token」策略（`[data-theme="dark"]` 改 `--paper`/`--ink` 等），组件样式零改动；主题初始化必须放在 `BaseLayout` head 的 `is:inline` 脚本里，否则会 FOUC 闪白。
+- 四季皮肤（`data-season`）与明暗（`data-theme`）正交：季节只改色相 token（moss/clay/gold/glow + ink 色温），绝不碰 paper/surface 明度（那是明暗模式独占），否则两维会冲突。新增季节只往 `tokens.css` 加 `[data-season]` 块 + `src/lib/seasons.mjs` 配置，组件零改动。
+- 月→季映射有两份（BaseLayout inline 脚本内联 + `seasons.mjs#monthToSeason`），改映射必须两处同步；季节初始化同样必须在无 FOUC 的 inline 脚本里，不能放 SeasonSwitcher 的外部 script。
 - 翻译能力优先复用 `i18n-jsautotranslate`，不要手写大段中英词典或自建翻译引擎。
 - 不要用 `import` 加载 `scripts/sync-obsidian.mjs`；它是顶层命令式执行 + 破坏性清空，误加载会清空已上线的 `src/pages/posts/` 和 `src/data/posts.json`。测试只能用静态分析，详见 `skills/regression-testing/SKILL.md`。
 - 不要给同步脚本写 Vitest include 通配模式（如 `scripts/**/*.mjs`）；只匹配 `*.test.mjs` 后缀。
@@ -60,6 +62,7 @@ vercel --prod --yes
 - 同步管线架构在 `skills/sync-pipeline-architecture/SKILL.md`。
 - 前端设计系统在 `skills/frontend-design-system/SKILL.md`。
 - 暗色/SEO/RSS/sitemap 在 `skills/dark-mode-seo-rss/SKILL.md`。
+- 四季皮肤系统在 `skills/seasonal-skin-system/SKILL.md`。
 - 项目级发布 skill 在 `skills/obsidian-blog-publisher/SKILL.md`。
 - 服务、合集、内容类型、统计和 API 响应统一从 `src/lib/siteModel.js` 扩展。
 - 数据形状契约（posts/topics/manifest）定义在 `src/lib/schema.mjs`（Zod）；`siteModel.js` import 时校验，同步脚本产出时校验，两端同源防漂移。改字段时三处同步：schema.mjs → siteModel.js → sync/lib/pipeline.mjs。
