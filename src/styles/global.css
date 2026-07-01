@@ -16,7 +16,7 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 18% 0%, rgba(185, 153, 86, 0.1), transparent 28rem),
+    radial-gradient(circle at 18% 0%, var(--glow), transparent 28rem),
     linear-gradient(90deg, rgba(65, 52, 34, 0.035) 1px, transparent 1px),
     linear-gradient(0deg, rgba(65, 52, 34, 0.028) 1px, transparent 1px),
     var(--paper);
@@ -170,6 +170,46 @@ img {
 .theme-toggle:hover {
   color: var(--ink);
   border-color: var(--line-strong);
+}
+
+/* 季节切换器：4 个色点横排，激活态用环高亮 */
+.season-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 4px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  height: 34px;
+}
+
+.season-dot {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.season-dot-fill {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--swatch);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.season-dot:hover .season-dot-fill {
+  transform: scale(1.18);
+}
+
+.season-dot.is-active .season-dot-fill {
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--swatch);
 }
 
 .hero {
@@ -758,5 +798,37 @@ code {
 
   .article-side {
     position: static;
+  }
+}
+
+/* =============================================================================
+ * 动效（调研蓝图 2.5：仅 3 类克制动效）—— 首页分层淡入 + 卡片 hover 轻位移。
+ * 强制尊重 prefers-reduced-motion，无障碍优先。
+ * ========================================================================== */
+@keyframes garden-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 首页区块分层淡入：用 animation-delay 形成节奏感，不依赖 JS */
+.site-shell.hero,
+.site-shell.section {
+  animation: garden-rise 0.6s ease-out both;
+}
+.site-shell.hero { animation-delay: 0s; }
+.site-shell.section:nth-of-type(2) { animation-delay: 0.08s; }
+.site-shell.section:nth-of-type(3) { animation-delay: 0.16s; }
+.site-shell.section:nth-of-type(4) { animation-delay: 0.24s; }
+
+/* 无障碍：尊重减少动效偏好，关闭一切非必要动画 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .site-shell.hero,
+  .site-shell.section {
+    animation: none;
   }
 }

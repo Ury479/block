@@ -1,0 +1,50 @@
+---
+import { SEASON_ORDER, SEASONS } from "../lib/seasons.mjs";
+// =============================================================================
+// 季节切换器 —— 4 个色点，点击切换 data-season（春/夏/秋/冬皮肤）。
+// 与 Header 的 theme-toggle（明暗）并列，两维正交。
+// 无 FOUC 初始 data-season 由 BaseLayout 的 inline 脚本在首帧设好；本组件只负责
+// 用户手动切换 + 持久化（localStorage.season + season-set 标记，之后不再自动跟随月份）。
+// =============================================================================
+---
+
+<div class="season-switcher no-translate" role="group" aria-label="选择季节皮肤">
+  {SEASON_ORDER.map((id) => (
+    <button
+      type="button"
+      class="season-dot"
+      data-season={id}
+      style={`--swatch: ${SEASONS[id].swatch}`}
+      aria-label={`${SEASONS[id].label}（${SEASONS[id].desc}）`}
+      title={`${SEASONS[id].label} · ${SEASONS[id].desc}`}
+    >
+      <span class="season-dot-fill"></span>
+    </button>
+  ))}
+</div>
+
+<script>
+  // 季节切换：点击色点 → 设 data-season + 持久化 + 标记为手动选择（不再自动跟月份）。
+  const dots = document.querySelectorAll(".season-switcher .season-dot");
+  const sync = () => {
+    const current = document.documentElement.dataset.season;
+    dots.forEach((d) => {
+      const active = d.dataset.season === current;
+      d.setAttribute("aria-pressed", String(active));
+      d.classList.toggle("is-active", active);
+    });
+  };
+  sync();
+  dots.forEach((d) => {
+    d.addEventListener("click", () => {
+      const next = d.dataset.season;
+      document.documentElement.dataset.season = next;
+      delete document.documentElement.dataset.seasonAuto;
+      try {
+        localStorage.setItem("season", next);
+        localStorage.setItem("season-set", "1"); // 标记：用户已手动选，之后尊重此选择
+      } catch {}
+      sync();
+    });
+  });
+</script>
